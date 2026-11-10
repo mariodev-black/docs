@@ -4,9 +4,9 @@
   "name": "SkalePayments",
   "description": "Documentação oficial da API SkalePayments",
   "colors": {
-    "primary": "#00E6A8",
-    "light": "#00C991",
-    "dark": "#00F5B5"
+    "primary": "#16A34A",
+    "light": "#07C983",
+    "dark": "#15803D"
   },
   "logo": {
     "light": "https://skalepayments.com.br/assets/logo-Bg1_ZqGD.png",
@@ -14,12 +14,6 @@
   },
   "favicon": "/favicon.svg",
   "navbar": {
-    "links": [
-      {
-        "label": "Site",
-        "href": "https://skalepayments.com.br"
-      }
-    ],
     "primary": {
       "type": "button",
       "label": "Acessar painel",
@@ -77,26 +71,7 @@
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentação",
-          "href": "/",
-          "icon": "book-open"
-        },
-        {
-          "anchor": "Painel Skale",
-          "href": "https://skalepayments.com.br/login",
-          "icon": "gauge-high"
-        },
-        {
-          "anchor": "Site",
-          "href": "https://skalepayments.com.br",
-          "icon": "globe"
-        }
-      ]
-    }
+    ]
   },
   "redirects": [
     { "source": "/introducao", "destination": "/" },
