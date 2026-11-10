@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "palm",
+  "theme": "mint",
   "name": "SkalePayments",
   "description": "Documentação oficial da API SkalePayments",
   "colors": {
@@ -31,48 +31,43 @@
     }
   },
   "navigation": {
-    "tabs": [
+    "groups": [
       {
-        "tab": "Documentação",
-        "icon": "book-open",
-        "groups": [
-          {
-            "group": "Primeiros passos",
-            "icon": "rocket",
-            "pages": [
-              "index",
-              "primeiros-passos/autenticacao",
-              "primeiros-passos/primeira-transacao"
-            ]
-          },
-          {
-            "group": "Guias",
-            "icon": "book-copy",
-            "pages": [
-              "guias/valores-e-status",
-              "guias/webhooks"
-            ]
-          },
-          {
-            "group": "Ajuda",
-            "icon": "circle-help",
-            "pages": ["ajuda/erros"]
-          }
+        "group": "Início",
+        "icon": "house",
+        "pages": ["index"]
+      },
+      {
+        "group": "Primeiros passos",
+        "icon": "rocket",
+        "pages": [
+          "primeiros-passos/autenticacao",
+          "primeiros-passos/primeira-transacao"
         ]
       },
       {
-        "tab": "Referência da API",
-        "icon": "square-terminal",
-        "groups": [
-          {
-            "group": "Endpoints",
-            "pages": [
-              "referencia/criar-transacao",
-              "referencia/consultar-transacao",
-              "referencia/dados-da-empresa"
-            ]
-          }
+        "group": "Transações",
+        "icon": "arrow-right-left",
+        "pages": [
+          "referencia/criar-transacao",
+          "referencia/consultar-transacao",
+          "guias/valores-e-status"
         ]
+      },
+      {
+        "group": "Empresa",
+        "icon": "building-2",
+        "pages": ["referencia/dados-da-empresa"]
+      },
+      {
+        "group": "Webhooks",
+        "icon": "webhook",
+        "pages": ["guias/webhooks"]
+      },
+      {
+        "group": "Ajuda",
+        "icon": "circle-help",
+        "pages": ["ajuda/erros"]
       }
     ]
   },
