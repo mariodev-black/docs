@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="SkalePayments">
+  <rect width="64" height="64" rx="16" fill="#090B0B"/>
+  <path d="M18 34.5 30.5 22a7 7 0 0 1 9.9 9.9L29.8 42.5a4 4 0 0 1-5.7-5.7l10.6-10.6" fill="none" stroke="#00E6A8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m46 29.5-12.5 12.5a7 7 0 0 1-9.9-9.9l10.6-10.6a4 4 0 0 1 5.7 5.7L29.3 37.8" fill="none" stroke="#00E6A8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

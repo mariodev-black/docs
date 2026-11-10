@@ -1,0 +1,530 @@
+openapi: 3.1.0
+info:
+  title: SkalePayments API
+  version: 1.0.0
+  description: |
+    API para criação e consulta de pagamentos PIX na SkalePayments.
+    Valores monetários das requisições são expressos em centavos.
+  contact:
+    name: SkalePayments
+    url: https://skalepayments.com.br
+servers:
+  - url: https://api.skalepayments.com.br
+    description: Produção
+tags:
+  - name: Transações
+    description: Criação e consulta de cobranças PIX
+  - name: Empresa
+    description: Perfil e permissões da conta autenticada
+security:
+  - ApiKeyAuth: []
+paths:
+  /transactions:
+    post:
+      tags: [Transações]
+      summary: Criar transação
+      description: |
+        Cria uma cobrança PIX. É possível incluir metadados, URL de postback
+        para acompanhar as mudanças de status.
+      operationId: criarTransacao
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: false
+          description: Chave única por pedido. Reutilize a mesma chave ao repetir uma tentativa interrompida.
+          schema:
+            type: string
+          example: pedido-PED-123
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTransactionRequest'
+            examples:
+              pix:
+                summary: Cobrança PIX
+                value:
+                  amount: 5000
+                  paymentMethod: pix
+                  pix:
+                    expiresInDays: 1
+                  customer:
+                    name: Cliente Exemplo
+                    email: cliente@exemplo.com
+                    phone: '11999999999'
+                    document:
+                      type: cpf
+                      number: '52998224725'
+                  items:
+                    - title: Produto 1
+                      unitPrice: 5000
+                      quantity: 1
+                      tangible: false
+                      externalRef: prod-123
+                  metadata:
+                    pedido: PED-123
+                  postbackUrl: https://api.seudominio.com.br/webhooks/skale
+      responses:
+        '201':
+          description: Transação criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                waitingPayment:
+                  summary: PIX aguardando pagamento
+                  value:
+                    success: true
+                    id: txn_abc123
+                    status: waiting_payment
+                    pix:
+                      qrcode: 00020126360014BR.GOV.BCB.PIX0114...
+                      end2EndId: null
+                      qrcodeImage: null
+                    metadata:
+                      pedido: PED-123
+                    postbackUrl: https://api.seudominio.com.br/webhooks/skale
+                    statusCode: 201
+                    timestamp: '2026-11-10T15:30:00-03:00'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+      x-codeSamples:
+        - lang: curl
+          label: cURL
+          source: |
+            curl --request POST \
+              --url 'https://api.skalepayments.com.br/transactions' \
+              --header 'Content-Type: application/json' \
+              --header 'X-API-Key: sk_sua_chave_aqui' \
+              --header 'Idempotency-Key: pedido-PED-123' \
+              --data '{"amount":5000,"paymentMethod":"pix","customer":{"name":"Cliente Exemplo","email":"cliente@exemplo.com","phone":"11999999999","document":{"type":"cpf","number":"52998224725"}},"items":[{"title":"Produto 1","unitPrice":5000,"quantity":1,"tangible":false}]}'
+        - lang: javascript
+          label: JavaScript
+          source: |
+            const response = await fetch('https://api.skalepayments.com.br/transactions', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-API-Key': process.env.SKALE_API_KEY,
+                'Idempotency-Key': 'pedido-PED-123',
+              },
+              body: JSON.stringify({
+                amount: 5000,
+                paymentMethod: 'pix',
+                customer: {
+                  name: 'Cliente Exemplo',
+                  email: 'cliente@exemplo.com',
+                  phone: '11999999999',
+                  document: { type: 'cpf', number: '52998224725' },
+                },
+                items: [{ title: 'Produto 1', unitPrice: 5000, quantity: 1, tangible: false }],
+              }),
+            });
+            const transaction = await response.json();
+  /transactions/{id}:
+    get:
+      tags: [Transações]
+      summary: Consultar transação
+      description: |
+        Retorna uma transação pertencente à conta autenticada. O identificador
+        pode ser o UUID ou o identificador externo aceito pela API.
+      operationId: consultarTransacao
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID ou identificador externo da transação
+          schema:
+            type: string
+          example: 550e8400-e29b-41d4-a716-446655440000
+      responses:
+        '200':
+          description: Transação encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                paid:
+                  summary: PIX pago
+                  value:
+                    success: true
+                    id: abc123456789
+                    status: paid
+                    metadata:
+                      pedido: PED-123
+                    postbackUrl: https://api.seudominio.com.br/webhooks/skale
+                    pix:
+                      qrcode: 00020126580014br.gov.bcb.pix0136...
+                      end2EndId: E1823612020260331143000123456789
+                    statusCode: 200
+                    timestamp: '2026-03-31T15:00:00-03:00'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Transação inexistente ou não pertencente à conta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                statusCode: 404
+                message: Transação não encontrada
+                code: HTTP_EXCEPTION
+                timestamp: '2026-03-31T15:10:00-03:00'
+                path: /transactions/550e8400-e29b-41d4-a716-446655440099
+                method: GET
+        '500':
+          $ref: '#/components/responses/InternalError'
+      x-codeSamples:
+        - lang: curl
+          label: cURL
+          source: |
+            curl --request GET \
+              --url 'https://api.skalepayments.com.br/transactions/550e8400-e29b-41d4-a716-446655440000' \
+              --header 'X-API-Key: sk_sua_chave_aqui'
+  /company:
+    get:
+      tags: [Empresa]
+      summary: Dados da empresa
+      description: |
+        Retorna cadastro, permissões, endereço, representante legal e saldo da
+        empresa autenticada. Campos sem dados podem ser omitidos.
+      operationId: obterDadosDaEmpresa
+      responses:
+        '200':
+          description: Dados da empresa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+              examples:
+                company:
+                  summary: Empresa autenticada
+                  value:
+                    userId: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+                    legalName: Empresa Exemplo LTDA
+                    blocked: false
+                    invoiceDescriptor: Empresa Exemplo
+                    createdAt: '2022-05-26T19:06:35.000Z'
+                    uploadedDocuments: true
+                    user:
+                      email: contato@exemplo.com
+                      phone: '11999999999'
+                      name: Responsável Exemplo
+                      isEmailVerified: true
+                      createdAt: '2022-05-26T19:03:23.000Z'
+                    document:
+                      number: '12345678000199'
+                      type: cnpj
+                    permissions:
+                      isPixAvailable: true
+                      transferEnabled: true
+                      transferPriceCents: 500
+                      anticipationEnabled: false
+                    defaultRecipient:
+                      legalName: Empresa Exemplo LTDA
+                      balance:
+                        available: 69345
+                        updatedAt: '2026-03-26T00:17:38.607Z'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+      x-codeSamples:
+        - lang: curl
+          label: cURL
+          source: |
+            curl --request GET \
+              --url 'https://api.skalepayments.com.br/company' \
+              --header 'X-API-Key: sk_sua_chave_aqui'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Chave de integração obtida no painel SkalePayments
+  schemas:
+    CreateTransactionRequest:
+      type: object
+      additionalProperties: false
+      required: [amount, paymentMethod, customer, items]
+      properties:
+        amount:
+          type: integer
+          minimum: 500
+          maximum: 100000000
+          description: Valor total em centavos, entre R$ 5,00 e R$ 1.000.000,00. A conta ou a rota adquirente podem possuir limites adicionais.
+          example: 5000
+        paymentMethod:
+          type: string
+          enum: [pix]
+          description: Método de pagamento. Atualmente use `pix`.
+        pix:
+          $ref: '#/components/schemas/PixOptions'
+        customer:
+          $ref: '#/components/schemas/Customer'
+        items:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/Item'
+        shipping:
+          $ref: '#/components/schemas/Shipping'
+        metadata:
+          type: object
+          description: Dados livres devolvidos na resposta e nos webhooks.
+          additionalProperties: true
+        postbackUrl:
+          type: string
+          format: uri
+          description: URL HTTPS que recebe mudanças de status da transação.
+    PixOptions:
+      type: object
+      additionalProperties: false
+      properties:
+        expiresInDays:
+          type: integer
+          minimum: 1
+          description: Prazo de validade do QR Code em dias.
+          example: 1
+    Customer:
+      type: object
+      additionalProperties: false
+      required: [name, email, phone, document]
+      properties:
+        name:
+          type: string
+          example: Cliente Exemplo
+        email:
+          type: string
+          format: email
+          example: cliente@exemplo.com
+        phone:
+          type: string
+          example: '11999999999'
+        document:
+          $ref: '#/components/schemas/Document'
+    Document:
+      type: object
+      additionalProperties: false
+      required: [type, number]
+      properties:
+        type:
+          type: string
+          enum: [cpf, cnpj]
+        number:
+          type: string
+          description: Documento com ou sem pontuação, conforme aceito pela API.
+          example: '52998224725'
+    Item:
+      type: object
+      additionalProperties: false
+      required: [title, unitPrice, quantity, tangible]
+      properties:
+        title:
+          type: string
+          example: Produto 1
+        unitPrice:
+          type: integer
+          minimum: 1
+          description: Valor unitário em centavos.
+          example: 5000
+        quantity:
+          type: integer
+          minimum: 1
+          example: 1
+        tangible:
+          type: boolean
+          description: Indica se o item é um produto físico.
+        externalRef:
+          type: string
+          description: Referência do item no seu sistema.
+          example: prod-123
+    Shipping:
+      type: object
+      description: Dados opcionais de entrega.
+      additionalProperties: false
+      required: [fee, address]
+      properties:
+        fee:
+          type: number
+          minimum: 0
+          description: Valor do frete em centavos.
+        address:
+          type: object
+          additionalProperties: false
+          required: [street, streetNumber, zipCode, city, neighborhood, state, country]
+          properties:
+            street: { type: string }
+            streetNumber: { type: string }
+            complement: { type: [string, 'null'] }
+            zipCode: { type: string }
+            city: { type: string }
+            neighborhood: { type: string }
+            state: { type: string }
+            country: { type: string }
+    TransactionResponse:
+      type: object
+      required: [success, id, status, statusCode, timestamp]
+      properties:
+        success:
+          type: boolean
+          const: true
+        id:
+          type: string
+          description: Identificador da transação.
+        status:
+          $ref: '#/components/schemas/TransactionStatus'
+        pix:
+          oneOf:
+            - $ref: '#/components/schemas/PixResponse'
+            - type: 'null'
+        metadata:
+          type: object
+          additionalProperties: true
+        postbackUrl:
+          type: [string, 'null']
+          format: uri
+        statusCode:
+          type: integer
+        timestamp:
+          type: string
+          format: date-time
+    TransactionStatus:
+      type: string
+      enum: [waiting_payment, paid, refused, cancelled, refunded]
+    PixResponse:
+      type: object
+      properties:
+        qrcode:
+          type: [string, 'null']
+        end2EndId:
+          type: [string, 'null']
+        qrcodeImage:
+          type: [string, 'null']
+        receiptUrl:
+          type: [string, 'null']
+        expirationDate:
+          type: [string, 'null']
+          format: date-time
+    Company:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        legalName:
+          type: string
+        blocked:
+          type: boolean
+        invoiceDescriptor:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        uploadedDocuments:
+          type: boolean
+        user:
+          type: object
+          properties:
+            email: { type: string, format: email }
+            phone: { type: string }
+            name: { type: string }
+            isEmailVerified: { type: boolean }
+            createdAt: { type: string, format: date-time }
+        document:
+          $ref: '#/components/schemas/Document'
+        permissions:
+          type: object
+          properties:
+            isPixAvailable: { type: boolean }
+            transferEnabled: { type: boolean }
+            transferPriceCents: { type: integer }
+            anticipationEnabled: { type: boolean }
+        details:
+          type: object
+          additionalProperties: true
+        legalRepresentative:
+          type: object
+          additionalProperties: true
+        socialContract:
+          type: string
+          format: uri
+        address:
+          type: object
+          additionalProperties: true
+        defaultRecipient:
+          type: object
+          properties:
+            legalName: { type: string }
+            document:
+              $ref: '#/components/schemas/Document'
+            transferSettings:
+              type: object
+              additionalProperties: true
+            balance:
+              type: object
+              properties:
+                available:
+                  type: integer
+                  description: Saldo disponível em centavos.
+                updatedAt:
+                  type: string
+                  format: date-time
+    ErrorResponse:
+      type: object
+      required: [success, statusCode, message, code, timestamp, path, method]
+      properties:
+        success:
+          type: boolean
+          const: false
+        statusCode:
+          type: integer
+        message:
+          type: string
+        code:
+          type: string
+          example: HTTP_EXCEPTION
+        timestamp:
+          type: string
+          format: date-time
+        path:
+          type: string
+        method:
+          type: string
+  responses:
+    BadRequest:
+      description: Dados inválidos ou regra de negócio não atendida
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: API Key ausente ou inválida
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Conta sem permissão para executar a operação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalError:
+      description: Erro interno da API
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'

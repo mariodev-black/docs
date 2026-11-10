@@ -1,0 +1,86 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "palm",
+  "name": "SkalePayments",
+  "description": "Documentação oficial da API SkalePayments",
+  "colors": {
+    "primary": "#00E6A8",
+    "light": "#00C991",
+    "dark": "#00F5B5"
+  },
+  "logo": {
+    "light": "https://skalepayments.com.br/assets/logo-Bg1_ZqGD.png",
+    "dark": "https://skalepayments.com.br/assets/logo-Bg1_ZqGD.png"
+  },
+  "favicon": "/favicon.svg",
+  "navbar": {
+    "links": [
+      {
+        "label": "Painel Skale",
+        "href": "https://skalepayments.com.br/login"
+      },
+      {
+        "label": "Site",
+        "href": "https://skalepayments.com.br"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Acessar painel",
+      "href": "https://skalepayments.com.br/login"
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentação",
+        "icon": "book-open",
+        "groups": [
+          {
+            "group": "Primeiros passos",
+            "icon": "rocket",
+            "pages": [
+              "index",
+              "primeiros-passos/autenticacao",
+              "primeiros-passos/primeira-transacao"
+            ]
+          },
+          {
+            "group": "Guias",
+            "icon": "book-copy",
+            "pages": [
+              "guias/valores-e-status",
+              "guias/webhooks"
+            ]
+          },
+          {
+            "group": "Ajuda",
+            "icon": "circle-help",
+            "pages": ["ajuda/erros"]
+          }
+        ]
+      },
+      {
+        "tab": "Referência da API",
+        "icon": "square-terminal",
+        "groups": [
+          {
+            "group": "Endpoints",
+            "pages": [
+              "referencia/criar-transacao",
+              "referencia/consultar-transacao",
+              "referencia/dados-da-empresa"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "redirects": [
+    { "source": "/introducao", "destination": "/" },
+    { "source": "/transactions", "destination": "/referencia/criar-transacao" },
+    { "source": "/get-transaction", "destination": "/referencia/consultar-transacao" },
+    { "source": "/get-company", "destination": "/referencia/dados-da-empresa" },
+    { "source": "/webhooks", "destination": "/guias/webhooks" }
+  ]
+}

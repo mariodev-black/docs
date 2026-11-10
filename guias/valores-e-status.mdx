@@ -1,0 +1,42 @@
+---
+title: "Valores e status"
+description: "Entenda unidades monetárias e o ciclo de vida das transações."
+icon: "chart-no-axes-column"
+---
+
+## Valores monetários
+
+Nas requisições e nas respostas principais da API, valores monetários são representados em **centavos**.
+
+| Valor enviado | Valor em reais |
+| ---: | ---: |
+| `500` | R$ 5,00 |
+| `5000` | R$ 50,00 |
+| `10000` | R$ 100,00 |
+
+<Note>
+  No payload de webhook, `transaction.amount` e `transaction.net_amount` são strings em reais com duas casas decimais, como `"50.00"`.
+</Note>
+
+## Status da transação
+
+| Status | Significado | Ação recomendada |
+| --- | --- | --- |
+| `waiting_payment` | PIX criado e aguardando pagamento | Exibir o QR Code e aguardar o webhook |
+| `paid` | Pagamento confirmado | Liberar o pedido de forma idempotente |
+| `refused` | Pagamento recusado | Informar a falha e permitir uma nova tentativa |
+| `cancelled` | Transação cancelada | Interromper o fluxo de cobrança |
+| `refunded` | Pagamento reembolsado | Atualizar o pedido e a conciliação financeira |
+
+## Processamento idempotente
+
+Seu endpoint de webhook pode receber o mesmo evento mais de uma vez. Antes de liberar um produto ou alterar um pedido:
+
+1. Localize a transação por `id`.
+2. Verifique se o status já foi processado.
+3. Registre a transição de forma atômica.
+4. Responda com HTTP `2xx` mesmo para eventos duplicados já processados.
+
+<Warning>
+  Nunca confirme um pedido somente porque a criação retornou com sucesso. A confirmação financeira ocorre quando o status passa para `paid`.
+</Warning>

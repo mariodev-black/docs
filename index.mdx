@@ -1,0 +1,66 @@
+---
+title: "SkalePayments API"
+description: "Integre pagamentos PIX à sua aplicação com uma API simples, segura e orientada a desenvolvedores."
+icon: "house"
+---
+
+<Info>
+  **Base URL de produção:** `https://api.skalepayments.com.br`
+</Info>
+
+A API SkalePayments permite criar cobranças PIX, consultar transações e acompanhar mudanças de status por webhooks.
+
+## Comece por aqui
+
+<CardGroup cols={2}>
+  <Card title="Autenticação" icon="key" href="/primeiros-passos/autenticacao">
+    Configure sua API Key no header `X-API-Key`.
+  </Card>
+  <Card title="Primeira transação" icon="bolt" href="/primeiros-passos/primeira-transacao">
+    Gere sua primeira cobrança PIX em poucos minutos.
+  </Card>
+  <Card title="Referência da API" icon="square-terminal" href="/referencia/criar-transacao">
+    Consulte parâmetros, respostas e teste endpoints no playground.
+  </Card>
+  <Card title="Webhooks" icon="webhook" href="/guias/webhooks">
+    Receba atualizações de pagamento no seu sistema.
+  </Card>
+</CardGroup>
+
+## Recursos disponíveis
+
+- Cobranças PIX com QR Code Copia e Cola.
+- Identificação do pagador e dos itens da venda.
+- Metadados livres para conciliação.
+- Consulta de transações por identificador.
+- Notificações por `postbackUrl` ou webhooks cadastrados no painel.
+- Consulta dos dados e permissões da empresa.
+
+<Warning>
+  Valores monetários enviados à API são expressos em **centavos**. Por exemplo, `5000` representa R$ 50,00.
+</Warning>
+
+## Fluxo de uma cobrança
+
+<Steps>
+  <Step title="Obtenha sua chave">
+    Acesse o painel Skale e copie sua credencial de integração.
+  </Step>
+  <Step title="Crie a transação">
+    Envie `POST /transactions` com os dados do pagamento e do cliente.
+  </Step>
+  <Step title="Apresente o PIX">
+    Mostre o conteúdo de `pix.qrcode` ao pagador.
+  </Step>
+  <Step title="Confirme o pagamento">
+    Processe o webhook e, quando necessário, consulte `GET /transactions/{id}`.
+  </Step>
+</Steps>
+
+## Ambientes
+
+| Ambiente | URL |
+| --- | --- |
+| Produção | `https://api.skalepayments.com.br` |
+
+No momento, a documentação pública apresenta apenas o ambiente de produção. Não utilize chaves reais em exemplos, tickets ou repositórios públicos.

@@ -1,0 +1,46 @@
+---
+title: "Erros e diagnóstico"
+description: "Entenda o padrão de erros HTTP retornado pela API."
+icon: "triangle-alert"
+---
+
+Quando uma requisição falha, a API retorna um status HTTP apropriado e um envelope semelhante a este:
+
+```json
+{
+  "success": false,
+  "statusCode": 400,
+  "message": "Descrição do erro",
+  "code": "HTTP_EXCEPTION",
+  "timestamp": "2026-11-10T15:30:00-03:00",
+  "path": "/transactions",
+  "method": "POST"
+}
+```
+
+## Códigos comuns
+
+| HTTP | Significado | Verificação |
+| ---: | --- | --- |
+| `400` | Requisição inválida | Confira campos, tipos, limites e regras de negócio |
+| `401` | Não autenticado | Confira o header `X-API-Key` |
+| `403` | Sem permissão | Verifique a conta e as permissões do recurso |
+| `404` | Recurso não encontrado | Confirme o identificador e a conta proprietária |
+| `409` | Conflito | Evite repetir uma operação não idempotente |
+| `422` | Dados não processáveis | Corrija os dados indicados na mensagem |
+| `429` | Limite de requisições | Aplique espera e backoff antes de tentar novamente |
+| `500` | Falha interna | Registre o horário e contate o suporte se persistir |
+
+## Diagnóstico seguro
+
+Ao solicitar suporte, envie:
+
+- Método e caminho da requisição.
+- Horário completo com fuso.
+- `statusCode`, `code` e `message` recebidos.
+- Identificador da transação, quando existir.
+- Corpo da requisição com dados pessoais mascarados.
+
+<Warning>
+  Nunca compartilhe a API Key completa, documentos pessoais, QR Codes ativos ou segredos de webhook.
+</Warning>

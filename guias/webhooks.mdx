@@ -1,0 +1,101 @@
+---
+title: "Webhooks e postbacks"
+description: "Receba mudanças de status das transações com segurança e confiabilidade."
+icon: "webhook"
+---
+
+A SkalePayments envia requisições HTTP `POST` com JSON quando o status de uma transação muda.
+
+## Formas de receber eventos
+
+<AccordionGroup>
+  <Accordion title="Postback da transação" icon="link">
+    Informe `postbackUrl` ao criar a transação. Essa URL recebe todos os status da transação, independentemente das configurações do painel.
+  </Accordion>
+  <Accordion title="Webhooks cadastrados no painel" icon="settings">
+    Cadastre URLs no painel, escolha os eventos recebidos e, quando necessário, configure `application-id` e `webhook-secret`.
+  </Accordion>
+</AccordionGroup>
+
+## Requisitos do endpoint
+
+- Utilize uma URL HTTPS pública.
+- Aceite requisições `POST` com `Content-Type: application/json`.
+- Responda em até 10 segundos.
+- Retorne HTTP `2xx` depois de persistir o evento.
+- Processe eventos de forma idempotente.
+
+Em falhas de rede, respostas `5xx` ou `429`, a entrega é repetida automaticamente com backoff. Seu endpoint deve aceitar eventos duplicados com segurança.
+
+## Headers enviados
+
+| Header | Quando é enviado |
+| --- | --- |
+| `Content-Type: application/json` | Sempre |
+| `application-id` | Webhook do painel configurado com essa credencial |
+| `webhook-secret` | Webhook do painel configurado com esse segredo |
+
+<Note>
+  O `postbackUrl` informado diretamente na transação não envia `application-id` nem `webhook-secret`.
+</Note>
+
+## Payload
+
+```json
+{
+  "id": "txn_abc123",
+  "status": "paid",
+  "end2EndId": "E18236120202401151030s0123456",
+  "pix": {
+    "qrcode": "00020126360014BR.GOV.BCB.PIX0114...",
+    "end2EndId": "E18236120202401151030s0123456",
+    "receiptUrl": null,
+    "expirationDate": null
+  },
+  "metadata": {
+    "pedido": "PED-123"
+  },
+  "postbackUrl": "https://api.seudominio.com.br/webhooks/skale",
+  "user": {
+    "name": "Cliente Exemplo",
+    "email": "cliente@exemplo.com",
+    "cpf": "52998224725",
+    "phone": "11999999999",
+    "documentType": "cpf"
+  },
+  "address": null,
+  "transaction": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "status": "paid",
+    "payment_method": "pix",
+    "amount": "50.00",
+    "net_amount": "48.50",
+    "created_at": "2026-11-10T15:30:00-03:00",
+    "updated_at": "2026-11-10T15:35:00-03:00",
+    "external_id": "txn_abc123",
+    "end2EndId": "E18236120202401151030s0123456"
+  }
+}
+```
+
+## Campos principais
+
+| Campo | Tipo | Descrição |
+| --- | --- | --- |
+| `id` | string | Identificador retornado na criação |
+| `status` | string | Estado atual da transação |
+| `end2EndId` | string ou null | Identificador fim a fim do PIX |
+| `pix` | object ou null | Dados do QR Code, comprovante e expiração |
+| `metadata` | object | Metadados enviados na criação |
+| `postbackUrl` | string ou null | URL de postback associada à transação |
+| `user` | object | Dados do pagador |
+| `address` | object ou null | Endereço, quando informado |
+| `transaction` | object | Dados financeiros e de conciliação |
+
+## Resposta recomendada
+
+```http
+HTTP/1.1 204 No Content
+```
+
+Responda somente depois que o evento estiver salvo. Execute tarefas demoradas de maneira assíncrona.

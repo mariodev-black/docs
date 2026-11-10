@@ -1,0 +1,42 @@
+---
+title: "Autenticação"
+description: "Autentique chamadas à API SkalePayments usando sua API Key."
+icon: "key"
+---
+
+Todas as rotas documentadas exigem uma API Key enviada no header `X-API-Key`.
+
+```http
+X-API-Key: sk_sua_chave_aqui
+```
+
+## Exemplo
+
+```bash
+curl --request GET \
+  --url 'https://api.skalepayments.com.br/company' \
+  --header 'X-API-Key: sk_sua_chave_aqui'
+```
+
+<Warning>
+  A API Key concede acesso à sua conta. Nunca a exponha no frontend, em aplicativos distribuídos, logs públicos ou repositórios.
+</Warning>
+
+## Boas práticas
+
+- Faça chamadas à API somente pelo seu backend.
+- Armazene a chave em variável de ambiente ou cofre de segredos.
+- Utilize chaves diferentes entre aplicações quando essa opção estiver disponível.
+- Troque imediatamente qualquer chave que possa ter sido exposta.
+- Remova a chave dos logs de requisição e de erro.
+
+## Falhas de autenticação
+
+Uma chave ausente, inválida ou sem permissão pode produzir uma resposta `401` ou `403`. Confira se:
+
+1. O nome do header é exatamente `X-API-Key`.
+2. Não existem espaços adicionais no valor.
+3. A chave pertence à conta correta e continua ativa.
+4. A conta possui permissão para usar o recurso solicitado.
+
+Consulte o [guia de erros](/ajuda/erros) para conhecer o envelope de erro da API.

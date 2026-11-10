@@ -1,0 +1,84 @@
+---
+title: "Primeira transação"
+description: "Crie uma cobrança PIX e obtenha o QR Code para pagamento."
+icon: "bolt"
+---
+
+Este guia cria uma cobrança PIX de R$ 50,00. Todos os valores monetários da requisição são enviados em centavos.
+
+## 1. Envie a requisição
+
+```bash
+curl --request POST \
+  --url 'https://api.skalepayments.com.br/transactions' \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-Key: sk_sua_chave_aqui' \
+  --header 'Idempotency-Key: pedido-PED-123' \
+  --data '{
+    "amount": 5000,
+    "paymentMethod": "pix",
+    "pix": {
+      "expiresInDays": 1
+    },
+    "customer": {
+      "name": "Cliente Exemplo",
+      "email": "cliente@exemplo.com",
+      "phone": "11999999999",
+      "document": {
+        "type": "cpf",
+        "number": "52998224725"
+      }
+    },
+    "items": [
+      {
+        "title": "Produto 1",
+        "unitPrice": 5000,
+        "quantity": 1,
+        "tangible": false,
+        "externalRef": "prod-123"
+      }
+    ],
+    "metadata": {
+      "pedido": "PED-123"
+    },
+    "postbackUrl": "https://api.seudominio.com.br/webhooks/skale"
+  }'
+```
+
+## 2. Leia a resposta
+
+Uma criação bem-sucedida retorna HTTP `201` e uma resposta semelhante a esta:
+
+```json
+{
+  "success": true,
+  "id": "txn_abc123",
+  "status": "waiting_payment",
+  "pix": {
+    "qrcode": "00020126360014BR.GOV.BCB.PIX0114...",
+    "end2EndId": null,
+    "qrcodeImage": null
+  },
+  "statusCode": 201,
+  "timestamp": "2026-11-10T15:30:00-03:00"
+}
+```
+
+Use `pix.qrcode` para apresentar o código PIX Copia e Cola. O status inicial normalmente é `waiting_payment`.
+
+## 3. Acompanhe o pagamento
+
+Configure `postbackUrl` para receber cada mudança de status e mantenha `GET /transactions/{id}` como mecanismo de consulta e conciliação.
+
+<Tip>
+  Envie uma `Idempotency-Key` única por pedido. Se precisar repetir a mesma tentativa por timeout ou falha de rede, reutilize a mesma chave para evitar cobranças duplicadas.
+</Tip>
+
+<CardGroup cols={2}>
+  <Card title="Testar no playground" icon="play" href="/referencia/criar-transacao">
+    Preencha a API Key e teste a criação de uma cobrança.
+  </Card>
+  <Card title="Configurar webhooks" icon="webhook" href="/guias/webhooks">
+    Implemente notificações de pagamento de forma confiável.
+  </Card>
+</CardGroup>
