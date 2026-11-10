@@ -16,10 +16,6 @@
   "navbar": {
     "links": [
       {
-        "label": "Painel Skale",
-        "href": "https://skalepayments.com.br/login"
-      },
-      {
         "label": "Site",
         "href": "https://skalepayments.com.br"
       }
@@ -31,45 +27,71 @@
     }
   },
   "navigation": {
-    "groups": [
+    "tabs": [
       {
-        "group": "Início",
-        "icon": "house",
-        "pages": ["index"]
-      },
-      {
-        "group": "Primeiros passos",
-        "icon": "rocket",
-        "pages": [
-          "primeiros-passos/autenticacao",
-          "primeiros-passos/primeira-transacao"
+        "tab": "Guias",
+        "groups": [
+          {
+            "group": "Primeiros passos",
+            "pages": [
+              "index",
+              "primeiros-passos/autenticacao",
+              "primeiros-passos/primeira-transacao"
+            ]
+          },
+          {
+            "group": "Integração",
+            "pages": [
+              "guias/valores-e-status",
+              "guias/webhooks"
+            ]
+          },
+          {
+            "group": "Ajuda",
+            "pages": ["ajuda/erros"]
+          }
         ]
       },
       {
-        "group": "Transações",
-        "icon": "arrow-right-left",
-        "pages": [
-          "referencia/criar-transacao",
-          "referencia/consultar-transacao",
-          "guias/valores-e-status"
+        "tab": "Referência da API",
+        "groups": [
+          {
+            "group": "Documentação da API",
+            "pages": ["referencia/introducao"]
+          },
+          {
+            "group": "Transações",
+            "pages": [
+              "referencia/criar-transacao",
+              "referencia/consultar-transacao"
+            ]
+          },
+          {
+            "group": "Empresa",
+            "pages": ["referencia/dados-da-empresa"]
+          }
         ]
-      },
-      {
-        "group": "Empresa",
-        "icon": "building-2",
-        "pages": ["referencia/dados-da-empresa"]
-      },
-      {
-        "group": "Webhooks",
-        "icon": "webhook",
-        "pages": ["guias/webhooks"]
-      },
-      {
-        "group": "Ajuda",
-        "icon": "circle-help",
-        "pages": ["ajuda/erros"]
       }
-    ]
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Documentação",
+          "href": "/",
+          "icon": "book-open"
+        },
+        {
+          "anchor": "Painel Skale",
+          "href": "https://skalepayments.com.br/login",
+          "icon": "gauge-high"
+        },
+        {
+          "anchor": "Site",
+          "href": "https://skalepayments.com.br",
+          "icon": "globe"
+        }
+      ]
+    }
   },
   "redirects": [
     { "source": "/introducao", "destination": "/" },

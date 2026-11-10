@@ -1,0 +1,57 @@
+---
+title: "Introdução"
+description: "Referência técnica dos endpoints públicos da API SkalePayments."
+icon: "book-open"
+---
+
+<Info>
+  **Base URL:** `https://api.skalepayments.com.br`
+</Info>
+
+## Visão geral
+
+A API SkalePayments utiliza HTTP e JSON para criar cobranças PIX, consultar transações e acessar informações da empresa autenticada.
+
+<Card
+  title="Especificação OpenAPI"
+  icon="file-code"
+  href="https://github.com/mariodev-black/docs/blob/main/openapi.yaml"
+>
+  Consulte o contrato completo e versionado da API.
+</Card>
+
+## Autenticação
+
+Todos os endpoints desta referência exigem uma API Key no header `X-API-Key`:
+
+```http
+X-API-Key: sk_sua_chave_aqui
+```
+
+<Warning>
+  Nunca exponha a API Key no navegador, em aplicativos distribuídos ou em repositórios públicos. As chamadas devem partir do seu backend.
+</Warning>
+
+## Endpoints
+
+<CardGroup cols={2}>
+  <Card title="Criar transação" icon="plus" href="/referencia/criar-transacao">
+    Crie uma cobrança PIX e receba o QR Code para pagamento.
+  </Card>
+  <Card title="Consultar transação" icon="magnifying-glass" href="/referencia/consultar-transacao">
+    Consulte uma transação pelo UUID ou identificador externo.
+  </Card>
+  <Card title="Dados da empresa" icon="building" href="/referencia/dados-da-empresa">
+    Consulte cadastro, permissões e saldo da conta autenticada.
+  </Card>
+</CardGroup>
+
+## Convenções
+
+- As requisições e respostas utilizam `application/json`.
+- Valores monetários são expressos em centavos, salvo quando indicado de outra forma.
+- Datas seguem o padrão ISO 8601.
+- Erros usam um envelope consistente com `statusCode`, `message`, `code`, `path` e `method`.
+- Requisições de criação podem usar `Idempotency-Key` para repetição segura.
+
+Para uma integração guiada, consulte a aba **Guias**. Para testar uma operação, abra o endpoint correspondente e utilize o playground interativo.
