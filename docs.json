@@ -27,48 +27,53 @@
     }
   },
   "navigation": {
-    "tabs": [
+    "languages": [
       {
-        "tab": "Guias",
-        "groups": [
+        "language": "pt-BR",
+        "tabs": [
           {
-            "group": "Primeiros passos",
-            "pages": [
-              "index",
-              "primeiros-passos/autenticacao",
-              "primeiros-passos/primeira-transacao"
+            "tab": "Guias",
+            "groups": [
+              {
+                "group": "Primeiros passos",
+                "pages": [
+                  "index",
+                  "primeiros-passos/autenticacao",
+                  "primeiros-passos/primeira-transacao"
+                ]
+              },
+              {
+                "group": "Integração",
+                "pages": [
+                  "guias/valores-e-status",
+                  "guias/webhooks"
+                ]
+              },
+              {
+                "group": "Ajuda",
+                "pages": ["ajuda/erros"]
+              }
             ]
           },
           {
-            "group": "Integração",
-            "pages": [
-              "guias/valores-e-status",
-              "guias/webhooks"
+            "tab": "Referência da API",
+            "groups": [
+              {
+                "group": "Documentação da API",
+                "pages": ["referencia/introducao"]
+              },
+              {
+                "group": "Transações",
+                "pages": [
+                  "referencia/criar-transacao",
+                  "referencia/consultar-transacao"
+                ]
+              },
+              {
+                "group": "Empresa",
+                "pages": ["referencia/dados-da-empresa"]
+              }
             ]
-          },
-          {
-            "group": "Ajuda",
-            "pages": ["ajuda/erros"]
-          }
-        ]
-      },
-      {
-        "tab": "Referência da API",
-        "groups": [
-          {
-            "group": "Documentação da API",
-            "pages": ["referencia/introducao"]
-          },
-          {
-            "group": "Transações",
-            "pages": [
-              "referencia/criar-transacao",
-              "referencia/consultar-transacao"
-            ]
-          },
-          {
-            "group": "Empresa",
-            "pages": ["referencia/dados-da-empresa"]
           }
         ]
       }
