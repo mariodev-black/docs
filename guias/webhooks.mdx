@@ -6,6 +6,26 @@ icon: "webhook"
 
 A SkalePayments envia requisições HTTP `POST` com JSON quando o status de uma transação muda.
 
+## Eventos disponíveis
+
+<CardGroup cols={2}>
+  <Card title="Pendente" icon="clock" href="/webhooks/evento-pendente">
+    Cobrança PIX aguardando pagamento (`waiting_payment`).
+  </Card>
+  <Card title="Pago" icon="circle-check" href="/webhooks/evento-pago">
+    Pagamento confirmado (`paid`).
+  </Card>
+  <Card title="Recusado" icon="circle-xmark" href="/webhooks/evento-recusado">
+    Pagamento recusado (`refused`).
+  </Card>
+  <Card title="Cancelado" icon="ban" href="/webhooks/evento-cancelado">
+    Transação cancelada (`cancelled`).
+  </Card>
+  <Card title="Reembolsado" icon="rotate-left" href="/webhooks/evento-reembolsado">
+    Pagamento reembolsado (`refunded`).
+  </Card>
+</CardGroup>
+
 ## Formas de receber eventos
 
 <AccordionGroup>

@@ -68,6 +68,25 @@
                 "pages": ["referencia/dados-da-empresa"]
               }
             ]
+          },
+          {
+            "tab": "Webhooks",
+            "groups": [
+              {
+                "group": "Comece aqui",
+                "pages": ["guias/webhooks"]
+              },
+              {
+                "group": "Eventos",
+                "pages": [
+                  "webhooks/evento-pendente",
+                  "webhooks/evento-pago",
+                  "webhooks/evento-recusado",
+                  "webhooks/evento-cancelado",
+                  "webhooks/evento-reembolsado"
+                ]
+              }
+            ]
           }
         ]
       }

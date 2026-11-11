@@ -1,0 +1,48 @@
+---
+title: "Transação cancelada"
+sidebarTitle: "Cancelado"
+description: "Evento enviado quando uma transação é cancelada."
+icon: "ban"
+---
+
+O evento `cancelled` informa que a cobrança foi cancelada.
+
+| Propriedade | Valor |
+| --- | --- |
+| Evento configurado no painel | `cancelled` |
+| `status` no payload | `cancelled` |
+| Significado | Transação cancelada |
+
+```json
+{
+  "id": "txn_abc123",
+  "status": "cancelled",
+  "end2EndId": null,
+  "metadata": {
+    "pedido": "PED-123"
+  },
+  "user": {
+    "name": "Cliente Exemplo",
+    "email": "cliente@exemplo.com",
+    "cpf": "52998224725",
+    "phone": "11999999999",
+    "documentType": "cpf"
+  },
+  "address": null,
+  "transaction": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "status": "cancelled",
+    "payment_method": "pix",
+    "amount": "50.00",
+    "net_amount": "48.50",
+    "created_at": "2026-11-10T15:30:00-03:00",
+    "updated_at": "2026-11-10T15:40:00-03:00",
+    "end2EndId": null,
+    "pix": null
+  }
+}
+```
+
+Interrompa o fluxo de cobrança e não aceite esse evento como confirmação financeira.
+
+Responda com HTTP `2xx` depois de persistir o evento.

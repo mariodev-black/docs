@@ -1,0 +1,61 @@
+---
+title: "Pagamento pendente"
+sidebarTitle: "Pendente"
+description: "Evento enviado quando uma cobrança PIX está aguardando pagamento."
+icon: "clock"
+---
+
+O evento `pending` é disparado quando a transação entra no status `waiting_payment`.
+
+| Propriedade | Valor |
+| --- | --- |
+| Evento configurado no painel | `pending` |
+| `status` no payload | `waiting_payment` |
+| Significado | PIX criado e aguardando pagamento |
+
+```json
+{
+  "id": "txn_abc123",
+  "status": "waiting_payment",
+  "end2EndId": null,
+  "metadata": {
+    "pedido": "PED-123"
+  },
+  "pix": {
+    "qrcode": "00020126360014BR.GOV.BCB.PIX0114...",
+    "end2EndId": null,
+    "receiptUrl": null,
+    "expirationDate": null
+  },
+  "user": {
+    "name": "Cliente Exemplo",
+    "email": "cliente@exemplo.com",
+    "cpf": "52998224725",
+    "phone": "11999999999",
+    "documentType": "cpf"
+  },
+  "address": null,
+  "transaction": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "status": "waiting_payment",
+    "payment_method": "pix",
+    "amount": "50.00",
+    "net_amount": "48.50",
+    "created_at": "2026-11-10T15:30:00-03:00",
+    "updated_at": "2026-11-10T15:30:00-03:00",
+    "end2EndId": null,
+    "pix": {
+      "qrcode": "00020126360014BR.GOV.BCB.PIX0114...",
+      "end2EndId": null,
+      "receiptUrl": null,
+      "expirationDate": null
+    }
+  }
+}
+```
+
+<Note>
+  Esse evento confirma apenas que a cobrança foi criada. Não libere o pedido antes de receber o evento `paid`.
+</Note>
+
+Responda com HTTP `2xx` depois de persistir o evento.

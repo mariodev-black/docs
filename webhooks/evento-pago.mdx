@@ -1,0 +1,61 @@
+---
+title: "Pagamento confirmado"
+sidebarTitle: "Pago"
+description: "Evento enviado quando o pagamento PIX é confirmado."
+icon: "circle-check"
+---
+
+O evento `paid` indica que o pagamento foi confirmado.
+
+| Propriedade | Valor |
+| --- | --- |
+| Evento configurado no painel | `paid` |
+| `status` no payload | `paid` |
+| Significado | Pagamento aprovado |
+
+```json
+{
+  "id": "txn_abc123",
+  "status": "paid",
+  "end2EndId": "E1823612020261110153500123456789",
+  "metadata": {
+    "pedido": "PED-123"
+  },
+  "pix": {
+    "qrcode": "00020126360014BR.GOV.BCB.PIX0114...",
+    "end2EndId": "E1823612020261110153500123456789",
+    "receiptUrl": null,
+    "expirationDate": null
+  },
+  "user": {
+    "name": "Cliente Exemplo",
+    "email": "cliente@exemplo.com",
+    "cpf": "52998224725",
+    "phone": "11999999999",
+    "documentType": "cpf"
+  },
+  "address": null,
+  "transaction": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "status": "paid",
+    "payment_method": "pix",
+    "amount": "50.00",
+    "net_amount": "48.50",
+    "created_at": "2026-11-10T15:30:00-03:00",
+    "updated_at": "2026-11-10T15:35:00-03:00",
+    "end2EndId": "E1823612020261110153500123456789",
+    "pix": {
+      "qrcode": "00020126360014BR.GOV.BCB.PIX0114...",
+      "end2EndId": "E1823612020261110153500123456789",
+      "receiptUrl": null,
+      "expirationDate": null
+    }
+  }
+}
+```
+
+<Tip>
+  Libere o pedido de maneira idempotente: registre o `id` da transação e ignore repetições do mesmo evento já processado.
+</Tip>
+
+Responda com HTTP `2xx` depois de confirmar a persistência.
