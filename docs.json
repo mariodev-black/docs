@@ -66,19 +66,11 @@
               {
                 "group": "Empresa",
                 "pages": ["referencia/dados-da-empresa"]
-              }
-            ]
-          },
-          {
-            "tab": "Webhooks",
-            "groups": [
-              {
-                "group": "Comece aqui",
-                "pages": ["guias/webhooks"]
               },
               {
-                "group": "Eventos",
+                "group": "Webhooks",
                 "pages": [
+                  "guias/webhooks",
                   "webhooks/evento-pendente",
                   "webhooks/evento-pago",
                   "webhooks/evento-recusado",
